@@ -12,5 +12,6 @@
     text-align: center;
     &__image {display: block; width: inherit; padding-bottom: 8px;  }
     &__text {font-size: 1em; font-weight: 600;}
+    &--selected {background-color: $morning-sky}
     input { position: absolute; left: 4px;}
   }
