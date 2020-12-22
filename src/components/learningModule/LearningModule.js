@@ -7,11 +7,13 @@ import Intro from '../intro/Intro';
 import './Styles.scss';
 
 const LearningModule = ({setGameStatus, gameStatus}) => {
-  const [currentQuestionId, setCurrentQuestionId] = React.useState(0);
-  const [quizData, setQuizData] = React.useState({});
   const [isComplete, setIsComplete] = React.useState(false);
-  const [isLoading, setIsLoading] = React.useState(false)
+  const [isLoading, setIsLoading] = React.useState(false);
+  const [isInactive, setIsInactive] = React.useState(true)
 
+  // Quiz Data
+  const [quizData, setQuizData] = React.useState({});
+  const [currentQuestionId, setCurrentQuestionId] = React.useState(0);
   let currentQuestion = quizData.questionArr ? quizData.questionArr[currentQuestionId]: {};
 
   React.useEffect(()=>{
@@ -28,6 +30,39 @@ const LearningModule = ({setGameStatus, gameStatus}) => {
         console.log(err);
       });
   }
+
+  // Response Data
+  const [responseData, setResponseData] = React.useState({})
+  const [isCorrectAnswer, setIsCorrectAnswer] = React.useState(false)
+
+  React.useEffect(() => {
+    if (currentQuestion.possibleAnswers) {
+      const initialResponseData = currentQuestion.possibleAnswers.reduce((accum, current) => ({
+        ...accum,
+        [current.text]: {
+          isSelected: false,
+          isResponseCorrect: current.isCorrect === false
+        }
+      }), {})
+
+      setResponseData(initialResponseData)
+    }
+  }, [currentQuestion])
+
+  React.useEffect(() => {
+    const values = Object.values(responseData)
+
+    const hasResponse = values.reduce((accum, current) => {
+      return accum === true || current.isSelected === true
+    }, false)
+    setIsInactive(!hasResponse)
+
+    const correct = values.reduce((accum, current) => {
+      return accum === true ? current.isResponseCorrect : accum
+    }, true)
+    setIsCorrectAnswer(correct)
+  }, [responseData])
+
 
   const handleSubmit=()=> {
     if(currentQuestionId < quizData.totalQuestions-1){
@@ -47,7 +82,7 @@ const LearningModule = ({setGameStatus, gameStatus}) => {
   let possibleAnswers = [];
   if(currentQuestion.possibleAnswers){
     possibleAnswers = currentQuestion.possibleAnswers.map((answer, index) => {
-      return <SelectionBox id={index} key={index} answer={answer} />
+      return <SelectionBox id={index} key={index} answer={answer} responseData={responseData} setResponseData={setResponseData}/>
     })
   }
 
@@ -70,11 +105,11 @@ const LearningModule = ({setGameStatus, gameStatus}) => {
               { possibleAnswers }
             </div>
             <div className="learningModule__submitButtonContainer">
-              <Button 
-                label="Submit" 
-                inactive 
+              <Button
+                label="Submit"
+                inactive={isInactive}
                 isLoading={isLoading}
-                handleSubmit={ handleSubmit } 
+                handleSubmit={ handleSubmit }
               />
             </div>
           </div>

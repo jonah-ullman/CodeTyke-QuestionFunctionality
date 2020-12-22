@@ -5,9 +5,9 @@ import { faSync } from '@fortawesome/free-solid-svg-icons'
 import './Styles.scss';
 
 const Button = ({ label, inactive, isLoading, customIcon, handleSubmit }) => {
-  
-  let icon; 
-  
+
+  let icon;
+
   let loader = <FontAwesomeIcon icon={faSync} className={`submitButton__iconLoader`} />
 
   if(isLoading){
@@ -17,7 +17,7 @@ const Button = ({ label, inactive, isLoading, customIcon, handleSubmit }) => {
   }
 
   return (
-    <button className={"submitButton " + (inactive ? "submitButton--inactive" : "")} onClick={handleSubmit}>
+    <button className={"submitButton " + (inactive ? "submitButton--inactive" : "")} onClick={handleSubmit} disabled={inactive}>
       {label}
       <span className="submitButton__icon">
         {icon}
