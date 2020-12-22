@@ -33,7 +33,7 @@ const LearningModule = ({setGameStatus, gameStatus}) => {
 
   // Response Data
   const [responseData, setResponseData] = React.useState({})
-  const [isCorrectAnswer, setIsCorrectAnswer] = React.useState(false)
+  const [isCorrectAnswer, setIsCorrectAnswer] = React.useState(null)
 
   React.useEffect(() => {
     if (currentQuestion.possibleAnswers) {
@@ -65,6 +65,7 @@ const LearningModule = ({setGameStatus, gameStatus}) => {
 
 
   const handleSubmit=()=> {
+
     if(currentQuestionId < quizData.totalQuestions-1){
         setIsLoading(true)
         setTimeout(function(){

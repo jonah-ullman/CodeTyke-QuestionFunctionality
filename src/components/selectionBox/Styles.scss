@@ -12,6 +12,8 @@
     text-align: center;
     &__image {display: block; width: inherit; padding-bottom: 8px;  }
     &__text {font-size: 1em; font-weight: 600;}
-    &--selected {background: $morning-sky;}
+    &--selected {background-color: $morning-sky;}
+    &--correct {background-color: $grass-blade;}
+    &--incorrect {background-color: $red-skittle;}
     input { position: absolute; left: 4px;}
   }
