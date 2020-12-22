@@ -4,8 +4,18 @@ import './Styles.scss';
 
 const SelectionBox = (props) => {
   const [isSelected, setIsSelected] = React.useState(false)
+  const isCorrectResponse = isSelected === props.answer.isCorrect
 
   function toggleSelectionBox() {
+    const previousResponseData = props.responseData
+    const updatedResponseData = {
+      ...previousResponseData,
+      [props.id]: {
+        isSelected: !isSelected,
+        isCorrectResponse
+      }
+    }
+    props.setResponseData(updatedResponseData)
     setIsSelected(!isSelected)
   }
 

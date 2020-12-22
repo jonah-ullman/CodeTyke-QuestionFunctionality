@@ -11,6 +11,16 @@ const LearningModule = ({setGameStatus, gameStatus}) => {
   const [quizData, setQuizData] = React.useState({});
   const [isComplete, setIsComplete] = React.useState(false);
   const [isLoading, setIsLoading] = React.useState(false)
+  const [responseData, setResponseData] = React.useState({})
+
+  let inactive = Object.values(responseData).reduce((accum, current) => {
+    return accum === true && current.isSelected === false
+  }, true)
+
+  let isCorrectResponse = Object.values(responseData).reduce((accum, current) => {
+    return accum === true && current.isCorrectResponse === true
+  }, true)
+  console.log(isCorrectResponse, "correct?")
 
   let currentQuestion = quizData.questionArr ? quizData.questionArr[currentQuestionId]: {};
 
@@ -47,7 +57,13 @@ const LearningModule = ({setGameStatus, gameStatus}) => {
   let possibleAnswers = [];
   if(currentQuestion.possibleAnswers){
     possibleAnswers = currentQuestion.possibleAnswers.map((answer, index) => {
-      return <SelectionBox id={index} key={index} answer={answer} />
+      return <SelectionBox
+                id={index}
+                key={index}
+                answer={answer}
+                responseData={responseData}
+                setResponseData={setResponseData}
+              />
     })
   }
 
@@ -70,11 +86,11 @@ const LearningModule = ({setGameStatus, gameStatus}) => {
               { possibleAnswers }
             </div>
             <div className="learningModule__submitButtonContainer">
-              <Button 
-                label="Submit" 
-                inactive 
+              <Button
+                label="Submit"
+                inactive={inactive}
                 isLoading={isLoading}
-                handleSubmit={ handleSubmit } 
+                handleSubmit={ handleSubmit }
               />
             </div>
           </div>
