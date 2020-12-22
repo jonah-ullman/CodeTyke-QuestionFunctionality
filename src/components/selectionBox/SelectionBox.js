@@ -18,7 +18,7 @@ const SelectionBox = ({answer, id, responseData, setResponseData}) => {
 
   return(
     <div
-      className="selectionBox"
+      className={`selectionBox ${isSelected ? "selectionBox--selected" : ""}`}
       id={"selectionBox" + id}
     >
       <img className="selectionBox__image" alt={answer.imageAlt} src={answer.image} />
