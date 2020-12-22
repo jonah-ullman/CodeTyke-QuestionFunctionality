@@ -12,15 +12,36 @@ const LearningModule = ({setGameStatus, gameStatus}) => {
   const [isComplete, setIsComplete] = React.useState(false);
   const [isLoading, setIsLoading] = React.useState(false)
   const [responseData, setResponseData] = React.useState({})
+  const [isInactive, setIsInactive] = React.useState(true)
 
-  let inactive = Object.values(responseData).reduce((accum, current) => {
-    return accum === true && current.isSelected === false
-  }, true)
+  React.useEffect(() => {
+    if (quizData.questionArr) {
+      const defaultResponseData = quizData.questionArr[currentQuestionId].possibleAnswers.reduce((accum, current) => {
+        return {
+          [current.text]: {
+            isSelected: false,
+            isCorrectResponse: current.isCorrect === false,
+          },
+          ...accum
+        }
+      }, {})
+      setResponseData(defaultResponseData)
+    }
+  }, [quizData, currentQuestionId])
+
+  React.useEffect(() => {
+
+    const updatedInactiveStatus = Object.values(responseData).reduce((accum, current) => {
+       return accum === true && current.isSelected === false
+     }, true)
+
+    setIsInactive(updatedInactiveStatus)
+  }, [responseData])
+
 
   let isCorrectResponse = Object.values(responseData).reduce((accum, current) => {
     return accum === true && current.isCorrectResponse === true
   }, true)
-  console.log(isCorrectResponse, "correct?")
 
   let currentQuestion = quizData.questionArr ? quizData.questionArr[currentQuestionId]: {};
 
@@ -88,7 +109,7 @@ const LearningModule = ({setGameStatus, gameStatus}) => {
             <div className="learningModule__submitButtonContainer">
               <Button
                 label="Submit"
-                inactive={inactive}
+                inactive={isInactive}
                 isLoading={isLoading}
                 handleSubmit={ handleSubmit }
               />
